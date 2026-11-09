@@ -40,6 +40,8 @@ themeToggle.addEventListener('click', () => {
 let audioContext = null;
 let oscillator = null;
 let gainNode = null;
+let mediaDestination = null;
+let audioElement = null;
 let isPlaying = false;
 
 function getFrequency() {
@@ -64,6 +66,7 @@ function setPresetState(value) {
 }
 
 function cleanupAudio() {
+  if (audioElement) { audioElement.pause(); audioElement.srcObject = null; }
   if (oscillator) oscillator.disconnect();
   if (gainNode) gainNode.disconnect();
   oscillator = null;
@@ -90,12 +93,16 @@ async function startAudio() {
 
     oscillator = audioContext.createOscillator();
     gainNode = audioContext.createGain();
+    mediaDestination = audioContext.createMediaStreamDestination();
+    audioElement = document.querySelector('#audioOutput');
+    audioElement.srcObject = mediaDestination.stream;
     oscillator.type = 'sine';
     oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
     gainNode.gain.setValueAtTime(0, audioContext.currentTime);
     gainNode.gain.linearRampToValueAtTime(Number(volumeInput.value), audioContext.currentTime + 0.18);
     oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
+    gainNode.connect(mediaDestination);
+    await audioElement.play();
     oscillator.addEventListener('ended', cleanupAudio, { once: true });
     oscillator.start();
     isPlaying = true;
@@ -119,24 +126,6 @@ function stopAudio(reason = 'Écoute arrêtée') {
   gainNode.gain.setTargetAtTime(0, now, 0.06);
   oscillator.stop(now + 0.24);
   setStatus(reason);
-}
-
-function stopWhenInactive() {
-  if (isPlaying) stopAudio('Écoute arrêtée : écran verrouillé ou application inactive');
-}
-
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) stopWhenInactive();
-});
-window.addEventListener('pagehide', stopWhenInactive);
-window.addEventListener('freeze', stopWhenInactive);
-
-function updatePlayingFrequency() {
-  const frequency = getFrequency();
-  if (isPlaying && frequency !== null) {
-    oscillator.frequency.setTargetAtTime(frequency, audioContext.currentTime, 0.03);
-    setStatus(`Lecture en cours à ${frequency} Hz`);
-  }
 }
 
 frequencyInput.addEventListener('input', () => {
@@ -169,5 +158,5 @@ renderFrequency();
 setPresetState(Number(frequencyInput.value));
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=3', { updateViaCache: 'none' }).catch(() => {}));
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=4', { updateViaCache: 'none' }).catch(() => {}));
 }
