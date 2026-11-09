@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f5f7">
+  <meta name="description" content="Un espace sonore simple pour écouter une fréquence dans le navigateur.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <title>Fréquence</title>
+</head>
+<body>
+  <a class="skip-link" href="#main">Aller au contenu</a>
+  <main id="main" class="shell">
+    <header class="topbar">
+      <div class="brand-mark" aria-hidden="true">◌</div>
+      <div>
+        <p class="eyebrow">ESPACE SONORE</p>
+        <h1>Fréquence</h1>
+      </div>
+      <span class="status-dot" title="Fonctionne dans le navigateur" aria-label="Fonctionne dans le navigateur"></span>
+    </header>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div id="orb" class="orb" aria-hidden="true"><span></span></div>
+      <p class="eyebrow">FRÉQUENCE ACTIVE</p>
+      <h2 id="hero-title" class="frequency-display"><span id="frequencyDisplay">432</span><small>Hz</small></h2>
+      <p id="status" class="status" role="status" aria-live="polite">Prêt à écouter</p>
+    </section>
+
+    <section class="panel" aria-labelledby="controls-title">
+      <h2 id="controls-title" class="sr-only">Réglage de la fréquence</h2>
+      <label class="field-label" for="frequencyInput">Votre fréquence</label>
+      <div class="frequency-input">
+        <input id="frequencyInput" type="number" min="20" max="20000" step="1" value="432" inputmode="decimal" aria-describedby="frequencyHelp">
+        <span>Hz</span>
+      </div>
+      <p id="frequencyHelp" class="helper">De 20 à 20 000 Hz</p>
+
+      <div class="preset-heading">Choisir un preset</div>
+      <div class="presets" role="list" aria-label="Fréquences prédéfinies">
+        <button class="preset is-selected" type="button" data-frequency="256" role="listitem">256 Hz</button>
+        <button class="preset" type="button" data-frequency="432" role="listitem">432 Hz</button>
+        <button class="preset" type="button" data-frequency="528" role="listitem">528 Hz</button>
+        <button class="preset" type="button" data-frequency="768" role="listitem">768 Hz</button>
+      </div>
+
+      <div class="volume-row">
+        <label for="volumeInput">Volume</label>
+        <input id="volumeInput" type="range" min="0" max="0.5" step="0.01" value="0.16" aria-label="Volume, limité à un niveau prudent">
+      </div>
+
+      <button id="playButton" class="play-button" type="button" aria-pressed="false">
+        <span class="play-icon" aria-hidden="true">▶</span>
+        <span>Écouter</span>
+      </button>
+    </section>
+
+    <p class="note">Signal sonore de bien-être. Écoutez à un volume modéré. Cette expérience ne remplace pas un avis médical.</p>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
