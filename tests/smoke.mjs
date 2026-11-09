@@ -12,6 +12,7 @@ const files = {
 assert.match(files.html, /id="frequencyInput"/);
 assert.match(files.html, /id="playButton"/);
 assert.match(files.html, /manifest\.webmanifest/);
+assert.match(files.html, /apple-touch-icon/);
 assert.match(files.js, /new AudioContext\(\)/);
 assert.match(files.js, /createOscillator\(\)/);
 assert.match(files.js, /createGain\(\)/);
