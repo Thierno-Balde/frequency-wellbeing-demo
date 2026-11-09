@@ -159,5 +159,5 @@ renderFrequency();
 setPresetState(Number(frequencyInput.value));
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=3', { updateViaCache: 'none' }).catch(() => {}));
 }
