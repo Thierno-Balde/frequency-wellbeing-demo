@@ -20,4 +20,4 @@ Le dépôt de développement privé est séparé du dépôt de démo.
 
 ## Sécurité d’écoute
 
-La lecture s’arrête lorsque le navigateur devient inactif, lorsque l’écran est verrouillé ou lorsque la page est quittée.
+La lecture utilise un élément média alimenté par Web Audio et peut continuer lorsque l’écran est verrouillé, selon les règles du navigateur et du système.
