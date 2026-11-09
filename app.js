@@ -112,14 +112,24 @@ async function startAudio() {
   }
 }
 
-function stopAudio() {
+function stopAudio(reason = 'Écoute arrêtée') {
   if (!oscillator || !audioContext) return;
   const now = audioContext.currentTime;
   gainNode.gain.cancelScheduledValues(now);
   gainNode.gain.setTargetAtTime(0, now, 0.06);
   oscillator.stop(now + 0.24);
-  setStatus('Écoute arrêtée');
+  setStatus(reason);
 }
+
+function stopWhenInactive() {
+  if (isPlaying) stopAudio('Écoute arrêtée : écran verrouillé ou application inactive');
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) stopWhenInactive();
+});
+window.addEventListener('pagehide', stopWhenInactive);
+window.addEventListener('freeze', stopWhenInactive);
 
 function updatePlayingFrequency() {
   const frequency = getFrequency();
