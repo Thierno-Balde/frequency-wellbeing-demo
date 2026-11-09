@@ -11,6 +11,32 @@ const status = document.querySelector('#status');
 const orb = document.querySelector('#orb');
 const presets = [...document.querySelectorAll('.preset')];
 
+const themeToggle = document.querySelector('#themeToggle');
+const themeIcon = document.querySelector('#themeIcon');
+const themeMeta = document.querySelector('meta[name="theme-color"]');
+
+function applyTheme(theme) {
+  const isDark = theme === 'dark';
+  document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
+  themeToggle.setAttribute('aria-pressed', String(isDark));
+  themeToggle.setAttribute('aria-label', isDark ? 'Activer le mode clair' : 'Activer le mode sombre');
+  themeIcon.textContent = isDark ? '☀' : '☾';
+  themeIcon.nextElementSibling.textContent = isDark ? 'Activer le mode clair' : 'Activer le mode sombre';
+  themeMeta.content = isDark ? '#0b0b0d' : '#f5f5f7';
+}
+
+let savedTheme = null;
+try { savedTheme = localStorage.getItem('frequence-theme'); } catch {}
+const initialTheme = savedTheme || (window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+applyTheme(initialTheme);
+
+themeToggle.addEventListener('click', () => {
+  const nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(nextTheme);
+  try { localStorage.setItem('frequence-theme', nextTheme); } catch {}
+});
+
+
 let audioContext = null;
 let oscillator = null;
 let gainNode = null;
