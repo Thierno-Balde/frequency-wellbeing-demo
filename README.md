@@ -16,3 +16,8 @@ Démo publique de l’application PWA **Fréquence**. Elle synthétise le son di
 L’application est une expérience de méditation, créativité et bien-être. Elle ne revendique aucun effet médical. Écouter à volume modéré.
 
 Le dépôt de développement privé est séparé du dépôt de démo.
+
+
+## Sécurité d’écoute
+
+La lecture s’arrête lorsque le navigateur devient inactif, lorsque l’écran est verrouillé ou lorsque la page est quittée.
