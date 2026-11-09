@@ -59,3 +59,12 @@ Application web installable qui produit un signal sonore directement dans le nav
 - CA7 : l’application ne référence aucun fichier audio externe ;
 - CA8 : le build statique peut être mis en cache par le service worker ;
 - CA9 : l’interface reste utilisable au clavier et avec lecteur d’écran sur les contrôles principaux.
+
+
+## Thème visuel
+
+- le mode clair reste disponible ;
+- un bouton bascule vers un thème sombre sobre ;
+- le choix est mémorisé localement dans le navigateur ;
+- le contenu, les contrôles et le contraste restent utilisables dans les deux thèmes ;
+- le thème ne modifie ni la fréquence ni le moteur audio.
