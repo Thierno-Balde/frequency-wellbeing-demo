@@ -62,3 +62,4 @@ html[data-theme="dark"] .frequency-input, html[data-theme="dark"] .preset { bord
 html[data-theme="dark"] .preset.is-selected { border-color: #f5f5f7; background: #f5f5f7; color: #1d1d1f; }
 html[data-theme="dark"] .play-button { background: #f5f5f7; color: #1d1d1f; box-shadow: 0 12px 24px rgba(0,0,0,.35); }
 html[data-theme="dark"] .play-button.is-playing { background: #ff453a; color: #fff; }
+.sr-audio{display:none}
