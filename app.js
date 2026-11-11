@@ -95,7 +95,8 @@ function renderPresetButtons(container, items) {
     button.type = 'button';
     button.className = 'preset';
     button.dataset.frequency = String(preset.frequencyHz);
-    button.textContent = `${preset.name} — ${preset.frequencyHz} Hz`;
+    const frequencyLabel = `${preset.frequencyHz} Hz`;
+    button.textContent = preset.name === frequencyLabel ? frequencyLabel : `${preset.name} — ${frequencyLabel}`;
     button.setAttribute('role', 'listitem');
     button.setAttribute('aria-label', `${preset.name}, ${preset.frequencyHz} Hz`);
     button.addEventListener('click', () => selectPreset(preset.frequencyHz));

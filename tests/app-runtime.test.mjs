@@ -112,6 +112,11 @@ test('app renders presets, saves/selects a custom preset and retunes the active 
   const builtIns = element('presetList');
   assert.equal(builtIns.children.length, 10);
   assert.ok(builtIns.children.some((button) => button.textContent.includes('Plexus solaire') && button.dataset.frequency === '528'));
+  assert.deepEqual(
+    builtIns.children.filter((button) => ['256', '432', '768'].includes(button.dataset.frequency)).map((button) => button.textContent),
+    ['256 Hz', '432 Hz', '768 Hz'],
+    'unnamed legacy presets show their frequency only once',
+  );
 
   element('customPresetName').value = '  Tempo doux  ';
   element('customPresetFrequency').value = '777';
