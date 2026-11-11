@@ -1,29 +1,29 @@
 # Fréquence — démo publique
 
-Démo publique de l’application PWA **Fréquence**. Elle synthétise le son directement dans le navigateur avec la Web Audio API.
+Démo publique de l’application PWA **Fréquence** : un signal sonore généré localement dans le navigateur avec Web Audio API.
 
 👉 **Ouvrir la démo :** https://thierno-balde.github.io/frequency-wellbeing-demo/
 
+## Interface
+
+L’écran met la fréquence active, sa saisie et le volume au premier plan. Les sept presets intégrés sont : Racine (396 Hz), Sacré (417 Hz), Plexus solaire (528 Hz), Cœur (639 Hz), Gorge (741 Hz), Troisième œil (852 Hz) et Couronne (963 Hz). Les presets historiques intégrés 256, 432 et 768 Hz ont été retirés. La valeur de lancement 432 Hz reste disponible comme fréquence libre.
+
+La commande **Écouter / Arrêter** reste accessible en bas de l’écran. **Mes presets** est replié par défaut. Les presets personnels existants restent conservés dans le stockage local du navigateur sur cet appareil; aucun compte ni synchronisation serveur.
+
 ## Aucun serveur audio
 
-- aucun fichier audio ;
+- aucun fichier audio généré ou stocké ;
 - aucun backend ;
 - aucun compte ;
-- aucun stockage de son ;
 - aucun modèle IA ;
 - le signal est créé à la volée sur l’appareil.
 
 L’application est une expérience de méditation, créativité et bien-être. Elle ne revendique aucun effet médical. Écouter à volume modéré.
 
-Le dépôt de développement privé est séparé du dépôt de démo.
+## Lecture en arrière-plan
 
+La lecture en arrière-plan a été validée manuellement par Thierno sur iPhone. Le comportement peut varier selon le navigateur et le système d’exploitation; cette validation ne vaut pas pour tous les appareils.
 
-## Sécurité d’écoute
+Les presets personnels (nom et fréquence uniquement) restent dans `localStorage` sur ce navigateur/appareil. Effacer les données du site peut les supprimer. Aucun audio n’est stocké.
 
-La lecture utilise un élément média alimenté par Web Audio et peut continuer lorsque l’écran est verrouillé, selon les règles du navigateur et du système.
-
-## Presets intégrés et personnels
-
-La démo comprend les presets Racine (396 Hz), Sacré (417 Hz), Plexus solaire (528 Hz), Cœur (639 Hz), Gorge (741 Hz), Troisième œil (852 Hz) et Couronne (963 Hz), en plus de 256, 432 et 768 Hz.
-
-Tu peux enregistrer un preset avec un nom et une fréquence entière entre 20 et 20 000 Hz. Ces presets personnels restent uniquement dans le stockage local du navigateur sur cet appareil : ils ne sont ni synchronisés ni sauvegardés sur un serveur. Effacer les données du site peut les supprimer.
+Le dépôt de développement privé est séparé de ce dépôt public de démonstration.

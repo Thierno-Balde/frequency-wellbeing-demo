@@ -4,10 +4,15 @@ import {
   loadCustomPresets,
   normalizeCustomPreset,
   validateFrequency,
-} from './preset-store.js?v=5';
+} from './preset-store.js?v=6';
 
 const frequencyInput = document.querySelector('#frequencyInput');
 const frequencyDisplay = document.querySelector('#frequencyDisplay');
+const selectedPresetName = document.querySelector('#selectedPresetName');
+const dockFrequency = document.querySelector('#dockFrequency');
+const frequencyHelp = document.querySelector('#frequencyHelp');
+const customPresetCount = document.querySelector('#customPresetCount');
+const volumeValue = document.querySelector('#volumeValue');
 const volumeInput = document.querySelector('#volumeInput');
 const playButton = document.querySelector('#playButton');
 const playLabel = playButton.querySelector('span:last-child');
@@ -61,10 +66,23 @@ function getFrequency() {
   return validateFrequency(frequencyInput.value);
 }
 
+let activePresetSelection = null;
+
 function renderFrequency() {
   const value = getFrequency();
   frequencyDisplay.textContent = value === null ? '—' : String(value);
   frequencyInput.setAttribute('aria-invalid', String(value === null));
+  frequencyHelp.textContent = value === null
+    ? 'Saisissez une fréquence entière entre 20 et 20 000 Hz.'
+    : 'De 20 à 20 000 Hz';
+  const matchingPreset = [...BUILT_IN_PRESETS, ...customPresets].find((preset) => preset.frequencyHz === value);
+  const name = value === null
+    ? 'Fréquence invalide'
+    : activePresetSelection?.frequencyHz === value
+      ? activePresetSelection.name
+      : matchingPreset?.name ?? 'Fréquence personnalisée';
+  selectedPresetName.textContent = name;
+  dockFrequency.textContent = `${value === null ? '—' : value} Hz · ${name}`;
 }
 
 function setStatus(message) {
@@ -77,14 +95,17 @@ function setCustomPresetStatus(message) {
 
 function setPresetState(value) {
   document.querySelectorAll('.preset').forEach((preset) => {
-    preset.classList.toggle('is-selected', Number(preset.dataset.frequency) === value);
+    const isSelected = Number(preset.dataset.frequency) === value;
+    preset.classList.toggle('is-selected', isSelected);
+    preset.setAttribute('aria-pressed', String(isSelected));
   });
 }
 
-function selectPreset(frequencyHz) {
-  frequencyInput.value = String(frequencyHz);
+function selectPreset(preset) {
+  activePresetSelection = preset;
+  frequencyInput.value = String(preset.frequencyHz);
   renderFrequency();
-  setPresetState(frequencyHz);
+  setPresetState(preset.frequencyHz);
   updatePlayingFrequency();
 }
 
@@ -97,9 +118,8 @@ function renderPresetButtons(container, items) {
     button.dataset.frequency = String(preset.frequencyHz);
     const frequencyLabel = `${preset.frequencyHz} Hz`;
     button.textContent = preset.name === frequencyLabel ? frequencyLabel : `${preset.name} — ${frequencyLabel}`;
-    button.setAttribute('role', 'listitem');
     button.setAttribute('aria-label', `${preset.name}, ${preset.frequencyHz} Hz`);
-    button.addEventListener('click', () => selectPreset(preset.frequencyHz));
+    button.addEventListener('click', () => selectPreset(preset));
     container.appendChild(button);
   });
 }
@@ -108,6 +128,9 @@ function renderPresets() {
   renderPresetButtons(presetList, BUILT_IN_PRESETS);
   renderPresetButtons(customPresetList, customPresets);
   customPresetEmpty.hidden = customPresets.length > 0;
+  customPresetCount.textContent = customPresets.length === 0
+    ? 'Aucun enregistré'
+    : `${customPresets.length} enregistré${customPresets.length === 1 ? '' : 's'}`;
   setPresetState(getFrequency());
 }
 
@@ -204,6 +227,7 @@ function saveCustomPreset() {
 }
 
 frequencyInput.addEventListener('input', () => {
+  activePresetSelection = null;
   renderFrequency();
   setPresetState(getFrequency());
   updatePlayingFrequency();
@@ -211,7 +235,12 @@ frequencyInput.addEventListener('input', () => {
 
 saveCustomPresetButton.addEventListener('click', saveCustomPreset);
 
+function renderVolumeValue() {
+  volumeValue.textContent = `${Math.round(Number(volumeInput.value) * 200)} %`;
+}
+
 volumeInput.addEventListener('input', () => {
+  renderVolumeValue();
   if (isPlaying && gainNode) {
     gainNode.gain.setTargetAtTime(Number(volumeInput.value), audioContext.currentTime, 0.03);
   }
@@ -225,7 +254,8 @@ playButton.addEventListener('click', () => {
 customPresets = loadCustomPresets(presetStorage);
 renderPresets();
 renderFrequency();
+renderVolumeValue();
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=5', { updateViaCache: 'none' }).catch(() => {}));
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=6', { updateViaCache: 'none' }).catch(() => {}));
 }

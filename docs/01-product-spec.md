@@ -70,9 +70,19 @@ Application web installable qui produit un signal sonore directement dans le nav
 - le thème ne modifie ni la fréquence ni le moteur audio.
 
 
-## Presets nommés et presets personnels — livraison publique
+## Presets nommés et presets personnels — chantier validé
 
-- Presets intégrés : Racine 396, Sacré 417, Plexus solaire 528, Cœur 639, Gorge 741, Troisième œil 852, Couronne 963 Hz ; les presets historiques 256, 432 et 768 Hz sont conservés.
-- Le 528 Hz existant est renommé Plexus solaire, sans doublon.
-- Les presets personnels sont un nom et une fréquence entière de 20 à 20 000 Hz, persistés via `localStorage` dans ce navigateur/appareil uniquement.
-- Pas de compte, backend, synchronisation cloud, stockage audio ou mixage de fréquences.
+- Presets intégrés : exactement sept profils nommés : Racine 396, Sacré 417, Plexus solaire 528, Cœur 639, Gorge 741, Troisième œil 852, Couronne 963 Hz. Les anciens presets intégrés 256, 432 et 768 Hz sont retirés.
+- Le preset existant 528 Hz est représenté une seule fois, sous le nom Plexus solaire.
+- Presets personnels : l’utilisateur saisit un nom et une fréquence entière de 20 à 20 000 Hz, puis enregistre explicitement.
+- Persistance dans `localStorage`, limitée au même navigateur/appareil ; aucun compte, serveur, audio ou synchronisation.
+- Données locales versionnées et validées à la lecture ; une erreur de stockage ne doit pas annoncer un faux succès.
+- Sélection d’un preset charge la fréquence active. Si la lecture est en cours, l’oscillateur est retuné sans redémarrage de page.
+- Les libellés de chakras sont des noms de presets fournis par l’utilisateur ; aucune propriété médicale n’est revendiquée.
+
+
+## Hiérarchie mobile validée
+
+- Fréquence active, saisie et volume en premier; valeur initiale 432 Hz conservée comme saisie libre pour ne pas modifier le comportement de démarrage.
+- Presets intégrés ensuite; « Mes presets » derrière un panneau repliable sans suppression ni migration du stockage existant.
+- Commande Écouter/Arrêter fixe en bas sur mobile, accessible pendant le défilement; cibles tactiles ≥44 px.

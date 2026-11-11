@@ -18,14 +18,13 @@ function memoryStorage(initial = null) {
   };
 }
 
-test('built-in presets contain the seven requested chakra labels and preserve the other defaults', () => {
-  const pairs = BUILT_IN_PRESETS.map(({ name, frequencyHz }) => [name, frequencyHz]);
-  for (const expected of [
+test('built-in presets are exactly the seven named profiles and omit retired defaults', () => {
+  assert.deepEqual(BUILT_IN_PRESETS.map(({ name, frequencyHz }) => [name, frequencyHz]), [
     ['Racine', 396], ['Sacré', 417], ['Plexus solaire', 528],
     ['Cœur', 639], ['Gorge', 741], ['Troisième œil', 852], ['Couronne', 963],
-    ['256 Hz', 256], ['432 Hz', 432], ['768 Hz', 768],
-  ]) assert.ok(pairs.some(([name, hz]) => name === expected[0] && hz === expected[1]), `${expected}`);
-  assert.equal(new Set(BUILT_IN_PRESETS.map(({ frequencyHz }) => frequencyHz)).size, BUILT_IN_PRESETS.length);
+  ]);
+  assert.equal(BUILT_IN_PRESETS.length, 7);
+  assert.equal(new Set(BUILT_IN_PRESETS.map(({ frequencyHz }) => frequencyHz)).size, 7);
 });
 
 test('frequency validation accepts integer Hz at both supported boundaries', () => {
