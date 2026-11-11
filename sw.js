@@ -1,10 +1,11 @@
-const CACHE_NAME = 'frequence-shell-v4';
-const VERSION = 'v4';
+const CACHE_NAME = 'frequence-shell-v5';
+const VERSION = 'v5';
 const ASSETS = [
   `./?${VERSION}`,
   `./index.html?${VERSION}`,
   `./styles.css?${VERSION}`,
   `./app.js?${VERSION}`,
+  `./preset-store.js?${VERSION}`,
   `./manifest.webmanifest?${VERSION}`,
   `./icon.svg?${VERSION}`,
   `./icon-180.png?${VERSION}`

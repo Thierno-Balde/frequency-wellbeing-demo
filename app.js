@@ -1,5 +1,10 @@
-const MIN_FREQUENCY = 20;
-const MAX_FREQUENCY = 20000;
+import {
+  BUILT_IN_PRESETS,
+  addCustomPreset,
+  loadCustomPresets,
+  normalizeCustomPreset,
+  validateFrequency,
+} from './preset-store.js?v=5';
 
 const frequencyInput = document.querySelector('#frequencyInput');
 const frequencyDisplay = document.querySelector('#frequencyDisplay');
@@ -9,7 +14,13 @@ const playLabel = playButton.querySelector('span:last-child');
 const playIcon = playButton.querySelector('.play-icon');
 const status = document.querySelector('#status');
 const orb = document.querySelector('#orb');
-const presets = [...document.querySelectorAll('.preset')];
+const presetList = document.querySelector('#presetList');
+const customPresetList = document.querySelector('#customPresetList');
+const customPresetName = document.querySelector('#customPresetName');
+const customPresetFrequency = document.querySelector('#customPresetFrequency');
+const saveCustomPresetButton = document.querySelector('#saveCustomPresetButton');
+const customPresetStatus = document.querySelector('#customPresetStatus');
+const customPresetEmpty = document.querySelector('#customPresetEmpty');
 
 const themeToggle = document.querySelector('#themeToggle');
 const themeIcon = document.querySelector('#themeIcon');
@@ -36,17 +47,18 @@ themeToggle.addEventListener('click', () => {
   try { localStorage.setItem('frequence-theme', nextTheme); } catch {}
 });
 
-
 let audioContext = null;
 let oscillator = null;
 let gainNode = null;
 let mediaDestination = null;
 let audioElement = null;
 let isPlaying = false;
+let customPresets = [];
+let presetStorage = null;
+try { presetStorage = globalThis.localStorage; } catch {}
 
 function getFrequency() {
-  const value = Number(frequencyInput.value);
-  return Number.isFinite(value) && value >= MIN_FREQUENCY && value <= MAX_FREQUENCY ? value : null;
+  return validateFrequency(frequencyInput.value);
 }
 
 function renderFrequency() {
@@ -59,10 +71,43 @@ function setStatus(message) {
   status.textContent = message;
 }
 
+function setCustomPresetStatus(message) {
+  customPresetStatus.textContent = message;
+}
+
 function setPresetState(value) {
-  presets.forEach((preset) => {
+  document.querySelectorAll('.preset').forEach((preset) => {
     preset.classList.toggle('is-selected', Number(preset.dataset.frequency) === value);
   });
+}
+
+function selectPreset(frequencyHz) {
+  frequencyInput.value = String(frequencyHz);
+  renderFrequency();
+  setPresetState(frequencyHz);
+  updatePlayingFrequency();
+}
+
+function renderPresetButtons(container, items) {
+  container.replaceChildren();
+  items.forEach((preset) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'preset';
+    button.dataset.frequency = String(preset.frequencyHz);
+    button.textContent = `${preset.name} — ${preset.frequencyHz} Hz`;
+    button.setAttribute('role', 'listitem');
+    button.setAttribute('aria-label', `${preset.name}, ${preset.frequencyHz} Hz`);
+    button.addEventListener('click', () => selectPreset(preset.frequencyHz));
+    container.appendChild(button);
+  });
+}
+
+function renderPresets() {
+  renderPresetButtons(presetList, BUILT_IN_PRESETS);
+  renderPresetButtons(customPresetList, customPresets);
+  customPresetEmpty.hidden = customPresets.length > 0;
+  setPresetState(getFrequency());
 }
 
 function cleanupAudio() {
@@ -82,7 +127,7 @@ function cleanupAudio() {
 async function startAudio() {
   const frequency = getFrequency();
   if (frequency === null) {
-    setStatus(`Choisissez une fréquence entre ${MIN_FREQUENCY} et ${MAX_FREQUENCY} Hz`);
+    setStatus('Saisissez une fréquence entière entre 20 et 20 000 Hz.');
     frequencyInput.focus();
     return;
   }
@@ -119,8 +164,15 @@ async function startAudio() {
   }
 }
 
+function updatePlayingFrequency() {
+  const frequency = getFrequency();
+  if (!isPlaying || frequency === null || !oscillator || !audioContext) return;
+  oscillator.frequency.setTargetAtTime(frequency, audioContext.currentTime, 0.015);
+  setStatus(`Lecture en cours à ${frequency} Hz`);
+}
+
 function stopAudio(reason = 'Écoute arrêtée') {
-  if (!oscillator || !audioContext) return;
+  if (!oscillator || !audioContext || !gainNode) return;
   const now = audioContext.currentTime;
   gainNode.gain.cancelScheduledValues(now);
   gainNode.gain.setTargetAtTime(0, now, 0.06);
@@ -128,20 +180,35 @@ function stopAudio(reason = 'Écoute arrêtée') {
   setStatus(reason);
 }
 
+function saveCustomPreset() {
+  const normalized = normalizeCustomPreset(customPresetName.value, customPresetFrequency.value);
+  if (!normalized) {
+    setCustomPresetStatus('Saisissez un nom et une fréquence entière entre 20 et 20 000 Hz.');
+    if (!String(customPresetName.value).trim()) customPresetName.focus();
+    else customPresetFrequency.focus();
+    return;
+  }
+
+  const result = addCustomPreset(presetStorage, normalized.name, normalized.frequencyHz);
+  if (!result.ok) {
+    setCustomPresetStatus('Enregistrement indisponible dans ce navigateur. Aucun preset n’a été sauvegardé.');
+    return;
+  }
+
+  customPresets = loadCustomPresets(presetStorage);
+  renderPresets();
+  customPresetName.value = '';
+  customPresetFrequency.value = '';
+  setCustomPresetStatus(`Preset « ${result.preset.name} » enregistré sur cet appareil.`);
+}
+
 frequencyInput.addEventListener('input', () => {
   renderFrequency();
-  setPresetState(Number(frequencyInput.value));
+  setPresetState(getFrequency());
   updatePlayingFrequency();
 });
 
-presets.forEach((preset) => {
-  preset.addEventListener('click', () => {
-    frequencyInput.value = preset.dataset.frequency;
-    renderFrequency();
-    setPresetState(Number(preset.dataset.frequency));
-    updatePlayingFrequency();
-  });
-});
+saveCustomPresetButton.addEventListener('click', saveCustomPreset);
 
 volumeInput.addEventListener('input', () => {
   if (isPlaying && gainNode) {
@@ -154,9 +221,10 @@ playButton.addEventListener('click', () => {
   else startAudio();
 });
 
+customPresets = loadCustomPresets(presetStorage);
+renderPresets();
 renderFrequency();
-setPresetState(Number(frequencyInput.value));
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=4', { updateViaCache: 'none' }).catch(() => {}));
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=5', { updateViaCache: 'none' }).catch(() => {}));
 }

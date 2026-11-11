@@ -68,3 +68,11 @@ Application web installable qui produit un signal sonore directement dans le nav
 - le choix est mémorisé localement dans le navigateur ;
 - le contenu, les contrôles et le contraste restent utilisables dans les deux thèmes ;
 - le thème ne modifie ni la fréquence ni le moteur audio.
+
+
+## Presets nommés et presets personnels — livraison publique
+
+- Presets intégrés : Racine 396, Sacré 417, Plexus solaire 528, Cœur 639, Gorge 741, Troisième œil 852, Couronne 963 Hz ; les presets historiques 256, 432 et 768 Hz sont conservés.
+- Le 528 Hz existant est renommé Plexus solaire, sans doublon.
+- Les presets personnels sont un nom et une fréquence entière de 20 à 20 000 Hz, persistés via `localStorage` dans ce navigateur/appareil uniquement.
+- Pas de compte, backend, synchronisation cloud, stockage audio ou mixage de fréquences.
