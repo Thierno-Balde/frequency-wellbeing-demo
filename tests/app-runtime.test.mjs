@@ -110,13 +110,18 @@ element('playButton').appendChild(new FakeElement('playLabel'));
 test('app renders presets, saves/selects a custom preset and retunes the active oscillator', async () => {
   await import('../app.js?runtime-test');
   const builtIns = element('presetList');
-  assert.equal(builtIns.children.length, 10);
-  assert.ok(builtIns.children.some((button) => button.textContent.includes('Plexus solaire') && button.dataset.frequency === '528'));
-  assert.deepEqual(
-    builtIns.children.filter((button) => ['256', '432', '768'].includes(button.dataset.frequency)).map((button) => button.textContent),
-    ['256 Hz', '432 Hz', '768 Hz'],
-    'unnamed legacy presets show their frequency only once',
-  );
+  assert.deepEqual(builtIns.children.map((button) => [button.textContent, button.dataset.frequency]), [
+    ['Racine — 396 Hz', '396'], ['Sacré — 417 Hz', '417'], ['Plexus solaire — 528 Hz', '528'],
+    ['Cœur — 639 Hz', '639'], ['Gorge — 741 Hz', '741'], ['Troisième œil — 852 Hz', '852'], ['Couronne — 963 Hz', '963'],
+  ]);
+  assert.equal(element('selectedPresetName').textContent, 'Fréquence personnalisée');
+  assert.equal(element('frequencyInput').value, '432', 'preserve the existing initial free-frequency value');
+  builtIns.children[2].click();
+  assert.equal(element('frequencyInput').value, '528');
+  assert.equal(element('selectedPresetName').textContent, 'Plexus solaire');
+  element('frequencyInput').value = '432';
+  element('frequencyInput').dispatch('input');
+  assert.equal(element('selectedPresetName').textContent, 'Fréquence personnalisée');
 
   element('customPresetName').value = '  Tempo doux  ';
   element('customPresetFrequency').value = '777';
@@ -129,6 +134,7 @@ test('app renders presets, saves/selects a custom preset and retunes the active 
   customList.children[0].click();
   assert.equal(element('frequencyInput').value, '777');
   assert.equal(element('frequencyDisplay').textContent, '777');
+  assert.equal(element('selectedPresetName').textContent, 'Tempo doux');
 
   element('playButton').click();
   await new Promise((resolve) => setImmediate(resolve));
@@ -136,4 +142,14 @@ test('app renders presets, saves/selects a custom preset and retunes the active 
   element('frequencyInput').value = '888';
   element('frequencyInput').dispatch('input');
   assert.ok(lastOscillator.frequency.calls.some((call) => call[0] === 'setTargetAtTime' && call[1] === 888));
+});
+
+
+test('preset controls keep button semantics and announce the selected state', async () => {
+  await import('../app.js?runtime-accessibility-test');
+  const buttons = element('presetList').children;
+  assert.equal(buttons[0].getAttribute('role'), null, 'retain the native button role');
+  assert.equal(buttons[0].getAttribute('aria-pressed'), 'false');
+  buttons[0].click();
+  assert.equal(buttons[0].getAttribute('aria-pressed'), 'true');
 });

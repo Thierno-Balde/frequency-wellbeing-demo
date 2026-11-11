@@ -8,7 +8,7 @@
   <link rel="manifest" href="manifest.webmanifest?v=4">
   <link rel="icon" href="icon.svg?v=4" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-180.png?v=4">
-  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="styles.css?v=6">
   <title>Fréquence</title>
 </head>
 <body>
@@ -16,35 +16,49 @@
   <main id="main" class="shell">
     <header class="topbar">
       <div class="brand-mark" aria-hidden="true">◌</div>
-      <div>
+      <div class="brand-copy">
         <p class="eyebrow">ESPACE SONORE</p>
         <h1>Fréquence</h1>
       </div>
-      <button id="themeToggle" class="theme-toggle" type="button" aria-pressed="false" aria-label="Activer le mode sombre"><span id="themeIcon" aria-hidden="true">☾</span><span class="sr-only">Activer le mode sombre</span></button>
+      <button id="themeToggle" class="theme-toggle" type="button" aria-pressed="false" aria-label="Activer le mode sombre">
+        <span id="themeIcon" aria-hidden="true">☾</span><span class="sr-only">Activer le mode sombre</span>
+      </button>
       <span class="status-dot" title="Fonctionne dans le navigateur" aria-label="Fonctionne dans le navigateur"></span>
     </header>
 
-    <section class="hero" aria-labelledby="hero-title">
-      <div id="orb" class="orb" aria-hidden="true"><span></span></div>
-      <p class="eyebrow">FRÉQUENCE ACTIVE</p>
+    <section class="active-card" aria-labelledby="hero-title">
+      <div class="active-card-heading">
+        <p class="eyebrow">FRÉQUENCE ACTIVE</p>
+        <div id="orb" class="orb" aria-hidden="true"><span></span></div>
+      </div>
       <h2 id="hero-title" class="frequency-display"><span id="frequencyDisplay">432</span><small>Hz</small></h2>
-      <p id="status" class="status" role="status" aria-live="polite">Prêt à écouter</p>
-    </section>
-
-    <section class="panel" aria-labelledby="controls-title">
-      <h2 id="controls-title" class="sr-only">Réglage de la fréquence</h2>
+      <p id="selectedPresetName" class="selected-name" aria-live="polite">Fréquence personnalisée</p>
       <label class="field-label" for="frequencyInput">Votre fréquence</label>
       <div class="frequency-input">
         <input id="frequencyInput" type="number" min="20" max="20000" step="1" value="432" inputmode="decimal" aria-describedby="frequencyHelp">
         <span>Hz</span>
       </div>
       <p id="frequencyHelp" class="helper">De 20 à 20 000 Hz</p>
+      <div class="volume-row">
+        <label for="volumeInput">Volume</label>
+        <input id="volumeInput" type="range" min="0" max="0.5" step="0.01" value="0.16" aria-label="Volume, limité à un niveau prudent">
+        <output id="volumeValue" for="volumeInput">32 %</output>
+      </div>
+    </section>
 
-      <h3 class="preset-heading">Choisir un preset</h3>
-      <div id="presetList" class="presets" role="list" aria-label="Fréquences prédéfinies"></div>
+    <section class="preset-section" aria-labelledby="presetHeading">
+      <div class="section-heading">
+        <div><h2 id="presetHeading">Choisir un preset</h2><p>Sept profils de fréquence.</p></div>
+        <span class="eyebrow">7 PROFILS</span>
+      </div>
+      <div id="presetList" class="presets" role="group" aria-label="Les sept presets intégrés"></div>
+    </section>
 
-      <section class="custom-preset-section" aria-labelledby="customPresetHeading">
-        <h3 id="customPresetHeading" class="preset-heading">Mes presets</h3>
+    <details id="customPresetSection" class="custom-preset-section">
+      <summary id="customPresetHeading">
+        <span>Mes presets</span><span id="customPresetCount" class="custom-preset-count">Aucun enregistré</span>
+      </summary>
+      <div class="custom-preset-content">
         <div class="custom-preset-form">
           <label for="customPresetName">Nom ou appellation</label>
           <input id="customPresetName" type="text" autocomplete="off" placeholder="Ex. Concentration">
@@ -58,23 +72,25 @@
           <p id="customPresetStatus" class="preset-status" role="status" aria-live="polite"></p>
         </div>
         <p id="customPresetEmpty" class="custom-preset-empty">Aucun preset personnel enregistré.</p>
-        <div id="customPresetList" class="presets custom-presets" role="list" aria-label="Mes fréquences enregistrées"></div>
-      </section>
-
-      <div class="volume-row">
-        <label for="volumeInput">Volume</label>
-        <input id="volumeInput" type="range" min="0" max="0.5" step="0.01" value="0.16" aria-label="Volume, limité à un niveau prudent">
+        <div id="customPresetList" class="presets custom-presets" role="group" aria-label="Mes fréquences enregistrées"></div>
       </div>
-
-      <button id="playButton" class="play-button" type="button" aria-pressed="false">
-        <span class="play-icon" aria-hidden="true">▶</span>
-        <span>Écouter</span>
-      </button>
-    </section>
+    </details>
 
     <p class="note">Signal sonore de bien-être. Écoutez à un volume modéré. Cette expérience ne remplace pas un avis médical.</p>
-  <audio id="audioOutput" class="sr-audio" playsinline preload="auto" aria-hidden="true"></audio>
   </main>
-  <script type="module" src="app.js?v=5"></script>
+
+  <div class="listen-dock" role="region" aria-label="Commande d’écoute">
+    <div class="listen-dock-inner">
+      <div class="listen-dock-copy">
+        <span id="status" class="status" role="status" aria-live="polite">Prêt à écouter</span>
+        <strong id="dockFrequency">432 Hz · Fréquence personnalisée</strong>
+      </div>
+      <button id="playButton" class="play-button" type="button" aria-pressed="false">
+        <span class="play-icon" aria-hidden="true">▶</span><span>Écouter</span>
+      </button>
+    </div>
+  </div>
+  <audio id="audioOutput" class="sr-audio" playsinline preload="auto" aria-hidden="true"></audio>
+  <script type="module" src="app.js?v=6"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
-const CACHE_NAME = 'frequence-shell-v5';
-const VERSION = 'v5';
+const CACHE_NAME = 'frequence-shell-v6';
+const VERSION = 'v=6';
 const ASSETS = [
   `./?${VERSION}`,
   `./index.html?${VERSION}`,
