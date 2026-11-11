@@ -8,7 +8,7 @@
   <link rel="manifest" href="manifest.webmanifest?v=4">
   <link rel="icon" href="icon.svg?v=4" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-180.png?v=4">
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
   <title>Fréquence</title>
 </head>
 <body>
@@ -40,13 +40,26 @@
       </div>
       <p id="frequencyHelp" class="helper">De 20 à 20 000 Hz</p>
 
-      <div class="preset-heading">Choisir un preset</div>
-      <div class="presets" role="list" aria-label="Fréquences prédéfinies">
-        <button class="preset is-selected" type="button" data-frequency="256" role="listitem">256 Hz</button>
-        <button class="preset" type="button" data-frequency="432" role="listitem">432 Hz</button>
-        <button class="preset" type="button" data-frequency="528" role="listitem">528 Hz</button>
-        <button class="preset" type="button" data-frequency="768" role="listitem">768 Hz</button>
-      </div>
+      <h3 class="preset-heading">Choisir un preset</h3>
+      <div id="presetList" class="presets" role="list" aria-label="Fréquences prédéfinies"></div>
+
+      <section class="custom-preset-section" aria-labelledby="customPresetHeading">
+        <h3 id="customPresetHeading" class="preset-heading">Mes presets</h3>
+        <div class="custom-preset-form">
+          <label for="customPresetName">Nom ou appellation</label>
+          <input id="customPresetName" type="text" autocomplete="off" placeholder="Ex. Concentration">
+          <label for="customPresetFrequency">Fréquence</label>
+          <div class="frequency-input">
+            <input id="customPresetFrequency" type="number" min="20" max="20000" step="1" inputmode="numeric" aria-describedby="customPresetHelp">
+            <span>Hz</span>
+          </div>
+          <p id="customPresetHelp" class="helper">De 20 à 20 000 Hz. Enregistré uniquement dans ce navigateur.</p>
+          <button id="saveCustomPresetButton" class="save-preset-button" type="button">Enregistrer mon preset</button>
+          <p id="customPresetStatus" class="preset-status" role="status" aria-live="polite"></p>
+        </div>
+        <p id="customPresetEmpty" class="custom-preset-empty">Aucun preset personnel enregistré.</p>
+        <div id="customPresetList" class="presets custom-presets" role="list" aria-label="Mes fréquences enregistrées"></div>
+      </section>
 
       <div class="volume-row">
         <label for="volumeInput">Volume</label>
@@ -62,6 +75,6 @@
     <p class="note">Signal sonore de bien-être. Écoutez à un volume modéré. Cette expérience ne remplace pas un avis médical.</p>
   <audio id="audioOutput" class="sr-audio" playsinline preload="auto" aria-hidden="true"></audio>
   </main>
-  <script src="app.js?v=4"></script>
+  <script type="module" src="app.js?v=5"></script>
 </body>
 </html>

@@ -63,3 +63,19 @@ html[data-theme="dark"] .preset.is-selected { border-color: #f5f5f7; background:
 html[data-theme="dark"] .play-button { background: #f5f5f7; color: #1d1d1f; box-shadow: 0 12px 24px rgba(0,0,0,.35); }
 html[data-theme="dark"] .play-button.is-playing { background: #ff453a; color: #fff; }
 .sr-audio{display:none}
+
+.preset-heading { margin: 0; }
+.presets { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.preset { display: flex; align-items: center; justify-content: center; min-height: 52px; padding: 9px 10px; text-align: center; line-height: 1.25; overflow-wrap: anywhere; }
+.custom-preset-section { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line); }
+.custom-preset-form { display: grid; gap: 8px; margin-top: 12px; }
+.custom-preset-form label { color: var(--muted); font-size: .78rem; font-weight: 650; }
+.custom-preset-form > input { width: 100%; min-height: 48px; padding: 11px 14px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,.84); color: var(--ink); }
+.custom-preset-form .frequency-input { margin-top: 0; }
+.custom-preset-form .helper { margin: 0 2px 4px; }
+.save-preset-button { min-height: 48px; border: 1px solid var(--line); border-radius: 14px; background: var(--ink); color: #fff; font-weight: 700; }
+.preset-status { min-height: 1.3em; margin: 2px 0 0; color: var(--muted); font-size: .82rem; }
+.custom-preset-empty { margin: 12px 0 0; color: var(--muted); font-size: .82rem; }
+.custom-preset-form input:focus-visible, .save-preset-button:focus-visible { outline: 3px solid rgba(111,125,255,.45); outline-offset: 3px; }
+html[data-theme="dark"] .custom-preset-form > input { border-color: rgba(255,255,255,.14); background: rgba(255,255,255,.08); color: var(--ink); }
+html[data-theme="dark"] .save-preset-button { border-color: rgba(255,255,255,.16); background: #f5f5f7; color: #1d1d1f; }

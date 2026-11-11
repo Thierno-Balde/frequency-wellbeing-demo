@@ -12,5 +12,7 @@ assert.match(files.js, /createMediaStreamDestination/);
 assert.match(files.js, /audioOutput/);
 assert.doesNotMatch(files.js, /stopWhenInactive/);
 assert.doesNotMatch(files.js, /visibilitychange/);
-assert.match(files.sw, /frequence-shell-v4/);
+assert.match(files.sw, /frequence-shell-v5/);
+assert.match(files.sw, /preset-store\.js/);
+assert.match(files.html, /type=\"module\" src=\"app\.js/);
 console.log('PASS: background media audio path, lock-safe behavior and refreshed PWA cache');
